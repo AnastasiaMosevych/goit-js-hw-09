@@ -4,10 +4,10 @@ import Notiflix from 'notiflix';
 
 const startBtn = document.querySelector("button[data-start]");
 const inputEl = document.querySelector("#datetime-picker");
-const spanDays = document.querySelector('span[data-days');
-const spanHours = document.querySelector('span[data-hours');
-const spanMinutes = document.querySelector('span[data-minutes');
-const spanSeconds = document.querySelector('span[data-seconds');
+const spanDays = document.querySelector('span[data-days]');
+const spanHours = document.querySelector('span[data-hours]');
+const spanMinutes = document.querySelector('span[data-minutes]');
+const spanSeconds = document.querySelector('span[data-seconds]');
 let timerId = null;
 
 
@@ -29,14 +29,22 @@ flatpickr(inputEl, options);
 startBtn.addEventListener('click', onClick);
 
 function onClick() {
+    startBtn.disabled = true;
+    timerId = setInterval(refreshTimerValues, 1000);  
+};
+
+function refreshTimerValues() {
     const selectedDate = inputEl.value;
     const ms = new Date(selectedDate) - Date.now();
     const convertedDate = convertMs(ms);
+    if (ms < 1000) {
+        clearInterval(timerId);
+    };
     spanDays.textContent = addLeadingZero(convertedDate.days);
     spanHours.textContent = addLeadingZero(convertedDate.hours);
     spanMinutes.textContent = addLeadingZero(convertedDate.minutes);
     spanSeconds.textContent = addLeadingZero(convertedDate.seconds);
-    timerId = setInterval(onClick, 1000);  
+    
 };
 
 function addLeadingZero(value) {
